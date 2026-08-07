@@ -1,3 +1,3 @@
-mod dimensions;
+pub mod dimensions;
 
 pub use dimensions::*;
