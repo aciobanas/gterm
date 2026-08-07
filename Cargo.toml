@@ -5,3 +5,6 @@ edition = "2024"
 
 [dependencies]
 gtherm-units = { version = "0.1.0", path = "gtherm-units" }
+
+[workspace]
+members = ["gtherm-units"]
