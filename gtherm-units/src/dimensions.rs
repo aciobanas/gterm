@@ -114,7 +114,11 @@ impl Mul for Dims {
     }
 }
 
+// some compile-time assertions to ensure that the const functions are working as expected
 const _: () = assert!(Dims::T.const_eq(&Dims::T));
 const _: () = assert!(!Dims::T.const_eq(&Dims::L));
 const _: () = assert!(Dims::T.are_base());
 const _: () = assert!(!Dims::ZERO.are_base());
+
+const _: () = assert!(Dims::T.const_mul(&Dims::L).const_eq(&Dims::new(1, 1, 0, 0, 0, 0, 0)));
+const _: () = assert!(Dims::T.const_div(&Dims::L).const_eq(&Dims::new(1, -1, 0, 0, 0, 0, 0)));
