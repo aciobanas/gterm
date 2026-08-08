@@ -35,7 +35,17 @@ impl Ratio {
         self.numerator * other.denominator == self.denominator * other.numerator
     }
 
-    
+    pub const fn to_double(&self) -> f64 {
+        self.numerator as f64 / self.denominator as f64
+    }
 
+    pub const fn const_mul(&self, other: &Ratio) -> Ratio {
+        Ratio::new(self.numerator * other.numerator, self.denominator * other.denominator)
+    }
+
+    pub const fn const_div(&self, other: &Ratio) -> Ratio {
+        // TODO
+        Ratio::new(self.numerator * other.denominator, self.denominator * other.numerator)
+    }
 
 }
