@@ -60,6 +60,11 @@ impl Ratio {
         self.numerator as f64 / self.denominator as f64
     }
 
+    pub fn simplify(&self) -> Ratio {
+        let gcd = self.numerator.gcd(&self.denominator);
+        Ratio::new(self.numerator / gcd, self.denominator / gcd)
+    }
+
     /// Const-context equivalent of exponentiation; raises `self` to the power `exp` (a negative `exp` inverts the result).
     /// Uses exponentiation by squaring, so it runs in `O(log |exp|)` regardless of how large `exp` is.
     /// Panics if `exp` is negative and `self` is zero, since that requires dividing by zero.
