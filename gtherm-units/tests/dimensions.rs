@@ -1,77 +1,73 @@
 use gtherm_units::dimensions::*;
 
 #[test]
-fn test_dimensions_creation() {
-    assert_eq!(Dims::T.time, 1);
-    assert_eq!(Dims::T.length, 0);
-    assert_eq!(Dims::T.mass, 0);
-    assert_eq!(Dims::T.electric_current, 0);
-    assert_eq!(Dims::T.thermodynamic_temperature, 0);
-    assert_eq!(Dims::T.amount_of_substance, 0);
-    assert_eq!(Dims::T.luminous_intensity, 0);
-    assert!(Dims::T.are_base());
+fn test_dims_new() {
+    let d = Dims::new(1, -2, 3, 0, 0, 0, 0);
+    assert_eq!(d.time, 1);
+    assert_eq!(d.length, -2);
+    assert_eq!(d.mass, 3);
+    assert_eq!(d.electric_current, 0);
+    assert_eq!(d.thermodynamic_temperature, 0);
+    assert_eq!(d.amount_of_substance, 0);
+    assert_eq!(d.luminous_intensity, 0);
+}
 
-    assert_eq!(Dims::L.length, 1);
-    assert!(Dims::L.are_base());
-
-    assert_eq!(Dims::M.mass, 1);
-    assert!(Dims::M.are_base());
-
-    assert_eq!(Dims::I.electric_current, 1);
-    assert!(Dims::I.are_base());
-
-    assert_eq!(Dims::THETA.thermodynamic_temperature, 1);
-    assert!(Dims::THETA.are_base());
-
-    assert_eq!(Dims::N.amount_of_substance, 1);
-    assert!(Dims::N.are_base());
-
-    assert_eq!(Dims::J.luminous_intensity, 1);
-    assert!(Dims::J.are_base());
-
-    assert_eq!(Dims::ZERO.time, 0);
-    assert_eq!(Dims::ZERO.length, 0);
-    assert_eq!(Dims::ZERO.mass, 0);
-    assert_eq!(Dims::ZERO.electric_current, 0);
-    assert_eq!(Dims::ZERO.thermodynamic_temperature, 0);
-    assert_eq!(Dims::ZERO.amount_of_substance, 0);
-    assert_eq!(Dims::ZERO.luminous_intensity, 0);
+#[test]
+fn test_dims_zero_is_dimensionless() {
+    assert_eq!(Dims::ZERO, Dims::new(0, 0, 0, 0, 0, 0, 0));
     assert!(!Dims::ZERO.are_base());
 }
 
 #[test]
-fn test_dimension_operations() {
-    let dims1 = Dims::T; // Time
-    let dims2 = Dims::L; // Length
-    let dims3 = Dims::M; // Mass
+fn test_dims_base_constants_have_single_exponent() {
+    assert_eq!(Dims::T, Dims::new(1, 0, 0, 0, 0, 0, 0));
+    assert_eq!(Dims::L, Dims::new(0, 1, 0, 0, 0, 0, 0));
+    assert_eq!(Dims::M, Dims::new(0, 0, 1, 0, 0, 0, 0));
+    assert_eq!(Dims::I, Dims::new(0, 0, 0, 1, 0, 0, 0));
+    assert_eq!(Dims::THETA, Dims::new(0, 0, 0, 0, 1, 0, 0));
+    assert_eq!(Dims::N, Dims::new(0, 0, 0, 0, 0, 1, 0));
+    assert_eq!(Dims::J, Dims::new(0, 0, 0, 0, 0, 0, 1));
+}
 
-    let mul_dims = dims1 * dims2;
-    assert_eq!(mul_dims.time, 1);
-    assert_eq!(mul_dims.length, 1);
-    assert_eq!(mul_dims.mass, 0);
-    assert!(!mul_dims.are_base());
+#[test]
+fn test_dims_are_base() {
+    for base in [Dims::T, Dims::L, Dims::M, Dims::I, Dims::THETA, Dims::N, Dims::J] {
+        assert!(base.are_base());
+    }
 
-    let div_dims = dims1 / dims2;
-    assert_eq!(div_dims.time, 1);
-    assert_eq!(div_dims.length, -1);
-    assert_eq!(div_dims.mass, 0);
-    assert!(!div_dims.are_base());
+    assert!(!Dims::ZERO.are_base());
+    assert!(!(Dims::T * Dims::L).are_base()); // composite dimension
+    assert!(!Dims::T.pow(2).are_base()); // T^2 isn't itself a base dimension
+}
 
-    let pow_dims = div_dims.pow(2);
-    assert_eq!(pow_dims.time, 2);
-    assert_eq!(pow_dims.length, -2);
-    assert_eq!(pow_dims.mass, 0);
-    assert!(!pow_dims.are_base());
+#[test]
+fn test_dims_eq() {
+    assert_eq!(Dims::T, Dims::T);
+    assert_ne!(Dims::T, Dims::L);
+    assert!(Dims::T.const_eq(&Dims::T));
+    assert!(!Dims::T.const_eq(&Dims::L));
+}
 
-    let mul_pow_dims = dims1 * dims2.pow(2);
-    assert_eq!(mul_pow_dims.time, 1);
-    assert_eq!(mul_pow_dims.length, 2);
-    assert_eq!(mul_pow_dims.mass, 0);
-    assert!(!mul_pow_dims.are_base());
+#[test]
+fn test_dims_mul_and_div_operators() {
+    // velocity: L / T
+    let velocity = Dims::L / Dims::T;
+    assert_eq!(velocity, Dims::new(-1, 1, 0, 0, 0, 0, 0));
 
-    let div_pow_dims = dims1 / dims3.pow(2);
-    assert_eq!(div_pow_dims.time, 1);
-    assert_eq!(div_pow_dims.length, 0);
-    assert_eq!(div_pow_dims.mass, -2);
-    assert!(!div_pow_dims.are_base());
+    // area: L * L
+    let area = Dims::L * Dims::L;
+    assert_eq!(area, Dims::new(0, 2, 0, 0, 0, 0, 0));
+
+    // force: M * L * T^-2
+    let force = Dims::M * Dims::L * Dims::T.pow(-2);
+    assert_eq!(force, Dims::new(-2, 1, 1, 0, 0, 0, 0));
+}
+
+#[test]
+fn test_dims_pow() {
+    assert_eq!(Dims::L.pow(0), Dims::ZERO);
+    assert_eq!(Dims::L.pow(1), Dims::L);
+    assert_eq!(Dims::L.pow(2), Dims::new(0, 2, 0, 0, 0, 0, 0));
+    assert_eq!(Dims::L.pow(-1), Dims::new(0, -1, 0, 0, 0, 0, 0));
+    assert_eq!(Dims::ZERO.pow(5), Dims::ZERO);
 }
