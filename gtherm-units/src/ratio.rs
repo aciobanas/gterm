@@ -39,13 +39,19 @@ impl Ratio {
 
     /// Const-context equivalent of `*`; trait methods can't be called from `const fn`/`const` items on stable Rust.
     pub const fn const_mul(&self, other: &Ratio) -> Ratio {
-        Ratio::new(self.numerator * other.numerator, self.denominator * other.denominator)
+        Ratio::new(
+            self.numerator * other.numerator,
+            self.denominator * other.denominator,
+        )
     }
 
     /// Const-context equivalent of `/`; trait methods can't be called from `const fn`/`const` items on stable Rust.
     pub const fn const_div(&self, other: &Ratio) -> Ratio {
         assert!(other.numerator != 0, "cannot divide by zero ratio");
-        Ratio::new(self.numerator * other.denominator, self.denominator * other.numerator)
+        Ratio::new(
+            self.numerator * other.denominator,
+            self.denominator * other.numerator,
+        )
     }
 
     pub const fn is_zero(&self) -> bool {
@@ -87,7 +93,6 @@ impl Ratio {
             result
         }
     }
-
 }
 
 impl Div for Ratio {
@@ -110,8 +115,16 @@ const _: () = assert!(Ratio::ONE.const_eq(&Ratio::ONE));
 const _: () = assert!(!Ratio::ONE.const_eq(&Ratio::ZERO));
 const _: () = assert!(Ratio::new(1, 2).const_eq(&Ratio::new(2, 4)));
 
-const _: () = assert!(Ratio::new(1, 2).const_mul(&Ratio::new(2, 3)).const_eq(&Ratio::new(1, 3)));
-const _: () = assert!(Ratio::new(1, 2).const_div(&Ratio::new(1, 3)).const_eq(&Ratio::new(3, 2)));
+const _: () = assert!(
+    Ratio::new(1, 2)
+        .const_mul(&Ratio::new(2, 3))
+        .const_eq(&Ratio::new(1, 3))
+);
+const _: () = assert!(
+    Ratio::new(1, 2)
+        .const_div(&Ratio::new(1, 3))
+        .const_eq(&Ratio::new(3, 2))
+);
 
 const _: () = assert!(matches!(Ratio::try_new(1, 2), Ok(_)));
 const _: () = assert!(matches!(Ratio::try_new(1, 0), Err(ZeroDenominatorError)));

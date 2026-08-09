@@ -70,7 +70,8 @@ impl Dims {
             length: self.length - other.length,
             mass: self.mass - other.mass,
             electric_current: self.electric_current - other.electric_current,
-            thermodynamic_temperature: self.thermodynamic_temperature - other.thermodynamic_temperature,
+            thermodynamic_temperature: self.thermodynamic_temperature
+                - other.thermodynamic_temperature,
             amount_of_substance: self.amount_of_substance - other.amount_of_substance,
             luminous_intensity: self.luminous_intensity - other.luminous_intensity,
         }
@@ -83,7 +84,8 @@ impl Dims {
             length: self.length + other.length,
             mass: self.mass + other.mass,
             electric_current: self.electric_current + other.electric_current,
-            thermodynamic_temperature: self.thermodynamic_temperature + other.thermodynamic_temperature,
+            thermodynamic_temperature: self.thermodynamic_temperature
+                + other.thermodynamic_temperature,
             amount_of_substance: self.amount_of_substance + other.amount_of_substance,
             luminous_intensity: self.luminous_intensity + other.luminous_intensity,
         }
@@ -136,5 +138,13 @@ const _: () = assert!(!Dims::T.const_eq(&Dims::L));
 const _: () = assert!(Dims::T.are_base());
 const _: () = assert!(!Dims::ZERO.are_base());
 
-const _: () = assert!(Dims::T.const_mul(&Dims::L).const_eq(&Dims::new(1, 1, 0, 0, 0, 0, 0)));
-const _: () = assert!(Dims::T.const_div(&Dims::L).const_eq(&Dims::new(1, -1, 0, 0, 0, 0, 0)));
+const _: () = assert!(
+    Dims::T
+        .const_mul(&Dims::L)
+        .const_eq(&Dims::new(1, 1, 0, 0, 0, 0, 0))
+);
+const _: () = assert!(
+    Dims::T
+        .const_div(&Dims::L)
+        .const_eq(&Dims::new(1, -1, 0, 0, 0, 0, 0))
+);
