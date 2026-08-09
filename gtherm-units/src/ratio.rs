@@ -1,7 +1,7 @@
 use std::ops::{Div, Mul};
-use num_integer::Integer;
 
 use crate::errors::ZeroDenominatorError;
+use crate::utils::gcd;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Ratio {
@@ -60,9 +60,10 @@ impl Ratio {
         self.numerator as f64 / self.denominator as f64
     }
 
-    pub fn simplify(&self) -> Ratio {
-        let gcd = self.numerator.gcd(&self.denominator);
-        Ratio::new(self.numerator / gcd, self.denominator / gcd)
+    /// Const-context equivalent of reducing to lowest terms; no trait bound needed, unlike `num_integer::Integer::gcd`.
+    pub const fn simplify(&self) -> Ratio {
+        let divisor = gcd(self.numerator, self.denominator);
+        Ratio::new(self.numerator / divisor, self.denominator / divisor)
     }
 
     /// Const-context equivalent of exponentiation; raises `self` to the power `exp` (a negative `exp` inverts the result).
@@ -124,3 +125,7 @@ const _: () = assert!(Ratio::new(2, 3).const_pow(3).const_eq(&Ratio::new(8, 27))
 const _: () = assert!(Ratio::new(2, 3).const_pow(-2).const_eq(&Ratio::new(9, 4)));
 const _: () = assert!(Ratio::ZERO.const_pow(3).const_eq(&Ratio::ZERO));
 const _: () = assert!(Ratio::ONE.const_pow(i32::MIN).const_eq(&Ratio::ONE));
+
+const _: () = assert!(Ratio::new(2, 4).simplify().const_eq(&Ratio::new(1, 2)));
+const _: () = assert!(Ratio::new(0, 5).simplify().const_eq(&Ratio::ZERO));
+const _: () = assert!(Ratio::new(7, 1).simplify().const_eq(&Ratio::new(7, 1)));
