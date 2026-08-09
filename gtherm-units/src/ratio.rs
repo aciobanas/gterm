@@ -60,6 +60,28 @@ impl Ratio {
         self.numerator as f64 / self.denominator as f64
     }
 
+    /// Const-context equivalent of exponentiation; raises `self` to the power `exp` (a negative `exp` inverts the result).
+    /// Uses exponentiation by squaring, so it runs in `O(log |exp|)` regardless of how large `exp` is.
+    /// Panics if `exp` is negative and `self` is zero, since that requires dividing by zero.
+    pub const fn const_pow(&self, exp: i32) -> Ratio {
+        // `unsigned_abs` (unlike unary `-`) has no overflow case, even for `exp == i32::MIN`.
+        let mut n = exp.unsigned_abs();
+        let mut base = *self;
+        let mut result = Ratio::ONE;
+        while n > 0 {
+            if n & 1 == 1 {
+                result = result.const_mul(&base);
+            }
+            base = base.const_mul(&base);
+            n >>= 1;
+        }
+        if exp < 0 {
+            Ratio::ONE.const_div(&result)
+        } else {
+            result
+        }
+    }
+
 }
 
 impl Div for Ratio {
