@@ -1,3 +1,5 @@
+//! Dimensional analysis for physical units, tracking exponents of the seven SI base quantities.
+
 use std::ops::{Div, Mul};
 
 /// Exponents of the seven SI base quantities, used to track a unit's dimensionality (e.g. velocity is `L * T^-1`).
