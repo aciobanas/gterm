@@ -31,7 +31,15 @@ fn test_dims_base_constants_have_single_exponent() {
 
 #[test]
 fn test_dims_are_base() {
-    for base in [Dims::T, Dims::L, Dims::M, Dims::I, Dims::THETA, Dims::N, Dims::J] {
+    for base in [
+        Dims::T,
+        Dims::L,
+        Dims::M,
+        Dims::I,
+        Dims::THETA,
+        Dims::N,
+        Dims::J,
+    ] {
         assert!(base.are_base());
     }
 
