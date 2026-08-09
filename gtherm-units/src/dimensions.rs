@@ -1,5 +1,6 @@
 use std::ops::{Div, Mul};
 
+/// Exponents of the seven SI base quantities, used to track a unit's dimensionality (e.g. velocity is `L * T^-1`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Dims {
     pub time: i32,
@@ -32,15 +33,24 @@ impl Dims {
         }
     }
 
+    /// Dimensionless (exponent 0 on every base quantity).
     pub const ZERO: Dims = Dims::new(0, 0, 0, 0, 0, 0, 0);
+    /// Time.
     pub const T: Dims = Dims::new(1, 0, 0, 0, 0, 0, 0);
+    /// Length.
     pub const L: Dims = Dims::new(0, 1, 0, 0, 0, 0, 0);
+    /// Mass.
     pub const M: Dims = Dims::new(0, 0, 1, 0, 0, 0, 0);
+    /// Electric current.
     pub const I: Dims = Dims::new(0, 0, 0, 1, 0, 0, 0);
+    /// Thermodynamic temperature.
     pub const THETA: Dims = Dims::new(0, 0, 0, 0, 1, 0, 0);
+    /// Amount of substance.
     pub const N: Dims = Dims::new(0, 0, 0, 0, 0, 1, 0);
+    /// Luminous intensity.
     pub const J: Dims = Dims::new(0, 0, 0, 0, 0, 0, 1);
 
+    /// Const-context equivalent of `==`; trait methods can't be called from `const fn`/`const` items on stable Rust.
     pub const fn const_eq(&self, other: &Dims) -> bool {
         self.time == other.time
             && self.length == other.length
@@ -51,6 +61,7 @@ impl Dims {
             && self.luminous_intensity == other.luminous_intensity
     }
 
+    /// Const-context equivalent of `/`; subtracts exponents since dividing units subtracts their dimensions.
     pub const fn const_div(&self, other: &Dims) -> Dims {
         Dims {
             time: self.time - other.time,
@@ -63,6 +74,7 @@ impl Dims {
         }
     }
 
+    /// Const-context equivalent of `*`; adds exponents since multiplying units adds their dimensions.
     pub const fn const_mul(&self, other: &Dims) -> Dims {
         Dims {
             time: self.time + other.time,
@@ -75,6 +87,7 @@ impl Dims {
         }
     }
 
+    /// Raises this dimension to `exponent` (e.g. area is `Dims::L.pow(2)`).
     pub const fn pow(&self, exponent: i32) -> Dims {
         Dims {
             time: self.time * exponent,
@@ -87,6 +100,7 @@ impl Dims {
         }
     }
 
+    /// Whether this is exactly one of the seven SI base dimensions (e.g. `T`, `L`), as opposed to a derived/composite one.
     pub const fn are_base(&self) -> bool {
         self.const_eq(&Dims::T)
             || self.const_eq(&Dims::L)
