@@ -3,21 +3,21 @@ use crate::dimensions::Dims;
 /// A dependency graph node describing how a derived quantity is built from others, e.g. velocity = length / time.
 // `Box` can't be used here since heap allocation isn't allowed in const context; use `&'static` references instead.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum QSpecEquation {
+pub enum QSpecEq {
     Term(&'static QSpec),
-    Mul(&'static QSpecEquation, &'static QSpecEquation),
-    Div(&'static QSpecEquation, &'static QSpecEquation),
-    Pow(&'static QSpecEquation, i32),
+    Mul(&'static QSpecEq, &'static QSpecEq),
+    Div(&'static QSpecEq, &'static QSpecEq),
+    Pow(&'static QSpecEq, i32),
 }
 
-impl QSpecEquation {
+impl QSpecEq {
     /// Computes the resulting `Dims` of this equation by recursively combining its operands' dimensions.
     pub const fn dims(&self) -> Dims {
         match self {
-            QSpecEquation::Term(spec) => spec.dims,
-            QSpecEquation::Mul(a, b) => a.dims().const_mul(&b.dims()),
-            QSpecEquation::Div(a, b) => a.dims().const_div(&b.dims()),
-            QSpecEquation::Pow(a, exp) => a.dims().pow(*exp),
+            QSpecEq::Term(spec) => spec.dims,
+            QSpecEq::Mul(a, b) => a.dims().const_mul(&b.dims()),
+            QSpecEq::Div(a, b) => a.dims().const_div(&b.dims()),
+            QSpecEq::Pow(a, exp) => a.dims().pow(*exp),
         }
     }
 }
@@ -27,7 +27,7 @@ impl QSpecEquation {
 pub struct QSpec {
     pub name: &'static str,
     pub dims: Dims,
-    pub equation: Option<&'static QSpecEquation>,
+    pub equation: Option<&'static QSpecEq>,
 }
 
 impl QSpec {
@@ -53,7 +53,7 @@ impl QSpec {
     pub const J: QSpec = QSpec::base("luminous_intensity", Dims::J);
 
     /// Constructs a derived spec, computing `dims` from `equation` rather than requiring it be passed in.
-    pub const fn derived(name: &'static str, equation: &'static QSpecEquation) -> Self {
+    pub const fn derived(name: &'static str, equation: &'static QSpecEq) -> Self {
         Self { name, dims: equation.dims(), equation: Some(equation) }
     }
 
@@ -68,9 +68,9 @@ impl QSpec {
     }
 }
 
-pub const Q_WIDTH: QSpec = QSpec::derived("width", &QSpecEquation::Term(&QSpec::L));
+pub const Q_WIDTH: QSpec = QSpec::derived("width", &QSpecEq::Term(&QSpec::L));
 
 pub const Q_VELOCITY: QSpec = QSpec::derived(
     "velocity",
-    &QSpecEquation::Div(&QSpecEquation::Term(&QSpec::L), &QSpecEquation::Term(&QSpec::T)),
+    &QSpecEq::Div(&QSpecEq::Term(&QSpec::L), &QSpecEq::Term(&QSpec::T)),
 );
