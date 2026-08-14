@@ -3,7 +3,7 @@
 use std::ops::{Div, Mul};
 
 /// Exponents of the seven SI base quantities, used to track a unit's dimensionality (e.g. velocity is `L * T^-1`).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Dims {
     pub time: i32,
     pub length: i32,
