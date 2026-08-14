@@ -1,8 +1,9 @@
 use crate::dims::Dims;
+use std::collections::HashSet;
 
 /// A dependency graph node describing how a derived quantity is built from others, e.g. velocity = length / time.
 // `Box` can't be used here since heap allocation isn't allowed in const context; use `&'static` references instead.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum QSpecEq {
     Term(&'static QSpec),
     Mul(&'static QSpecEq, &'static QSpecEq),
@@ -23,7 +24,7 @@ impl QSpecEq {
 }
 
 /// A physical quantity's specification: its name, dimensionality, and (if derived) the equation it comes from.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct QSpec {
     pub name: &'static str,
     pub dims: Dims,
@@ -65,6 +66,39 @@ impl QSpec {
     /// Whether this is derived from an equation, as opposed to one of the seven SI base quantities.
     pub const fn is_derived(&self) -> bool {
         self.equation.is_some()
+    }
+
+    /// Find the same kind quantity of two quantity specs, if any. Returns `None` if they are unrelated.
+    pub fn find_same_kind(&'static self, other: &'static QSpec) -> Option<&'static QSpec> {
+        if self.dims != other.dims {
+            return None;
+        }
+
+        // add in a set all the ancestors of `self`, including itself, on condition
+        // equation is a Term (sub quantity)
+        let mut self_ancestors: HashSet<&QSpec> = HashSet::new();
+        let mut current = self;
+        loop {
+            self_ancestors.insert(current);
+            match current.equation {
+                Some(QSpecEq::Term(sub)) => current = sub,
+                _ => break,
+            }
+        }
+
+        // traverse the ancestors of `other`, returning the first one that is also an ancestor of `self`
+        let mut current = other;
+        loop {
+            if self_ancestors.contains(current) {
+                return Some(current);
+            }
+            match current.equation {
+                Some(QSpecEq::Term(sub)) => current = sub,
+                _ => break,
+            }
+        }
+
+        None
     }
 }
 
