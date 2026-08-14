@@ -68,34 +68,28 @@ impl QSpec {
         self.equation.is_some()
     }
 
-    /// Find the same kind quantity of two quantity specs, if any. Returns `None` if they are unrelated.
+    /// Finds the nearest common sub-kind ancestor (via `Term` links), if any.
     pub fn find_same_kind(&'static self, other: &'static QSpec) -> Option<&'static QSpec> {
         if self.dims != other.dims {
             return None;
         }
 
-        // add in a set all the ancestors of `self`, including itself, on condition
-        // equation is a Term (sub quantity)
-        let mut self_ancestors: HashSet<&QSpec> = HashSet::new();
-        let mut current = self;
+        let mut self_ancestors: HashSet<&'static QSpec> = HashSet::new();
+        
+        let mut current: &'static QSpec = self;
         loop {
             self_ancestors.insert(current);
-            match current.equation {
-                Some(QSpecEq::Term(sub)) => current = sub,
-                _ => break,
-            }
+            let Some(QSpecEq::Term(sub)) = current.equation else { break };
+            current = sub;
         }
 
-        // traverse the ancestors of `other`, returning the first one that is also an ancestor of `self`
-        let mut current = other;
+        let mut current: &'static QSpec = other;
         loop {
             if self_ancestors.contains(current) {
                 return Some(current);
             }
-            match current.equation {
-                Some(QSpecEq::Term(sub)) => current = sub,
-                _ => break,
-            }
+            let Some(QSpecEq::Term(sub)) = current.equation else { break };
+            current = sub;
         }
 
         None
