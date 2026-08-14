@@ -1,4 +1,4 @@
-use gtherm_units::dimensions::*;
+use gtherm_units::dims::*;
 
 #[test]
 fn test_dims_new() {

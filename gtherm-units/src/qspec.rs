@@ -1,4 +1,4 @@
-use crate::dimensions::Dims;
+use crate::dims::Dims;
 
 /// A dependency graph node describing how a derived quantity is built from others, e.g. velocity = length / time.
 // `Box` can't be used here since heap allocation isn't allowed in const context; use `&'static` references instead.
