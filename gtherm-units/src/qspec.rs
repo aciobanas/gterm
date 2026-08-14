@@ -96,9 +96,38 @@ impl QSpec {
     }
 }
 
-pub const Q_WIDTH: QSpec = QSpec::derived("width", &QSpecEq::Term(&QSpec::L));
+// some compile-time assertions to ensure that the const functions are working as expected
+const _: () = assert!(QSpec::T.is_base());
+const _: () = assert!(!QSpec::T.is_derived());
+const _: () = assert!(QSpec::L.dims.const_eq(&Dims::L));
 
-pub const Q_VELOCITY: QSpec = QSpec::derived(
+const _: () = assert!(QSpecEq::Term(&QSpec::L).dims().const_eq(&Dims::L));
+const _: () = assert!(
+    QSpecEq::Mul(&QSpecEq::Term(&QSpec::L), &QSpecEq::Term(&QSpec::T))
+        .dims()
+        .const_eq(&Dims::L.const_mul(&Dims::T))
+);
+const _: () = assert!(
+    QSpecEq::Div(&QSpecEq::Term(&QSpec::L), &QSpecEq::Term(&QSpec::T))
+        .dims()
+        .const_eq(&Dims::L.const_div(&Dims::T))
+);
+const _: () = assert!(
+    QSpecEq::Pow(&QSpecEq::Term(&QSpec::L), 3)
+        .dims()
+        .const_eq(&Dims::L.pow(3))
+);
+
+const _Q_WIDTH: QSpec = QSpec::derived("width", &QSpecEq::Term(&QSpec::L));
+const _: () = assert!(_Q_WIDTH.is_derived());
+const _: () = assert!(!_Q_WIDTH.is_base());
+const _: () = assert!(_Q_WIDTH.dims.const_eq(&Dims::L));
+
+const _Q_VELOCITY: QSpec = QSpec::derived(
     "velocity",
     &QSpecEq::Div(&QSpecEq::Term(&QSpec::L), &QSpecEq::Term(&QSpec::T)),
 );
+const _: () = assert!(_Q_VELOCITY.is_derived());
+const _: () = assert!(_Q_VELOCITY.dims.const_eq(&Dims::L.const_div(&Dims::T)));
+
+
