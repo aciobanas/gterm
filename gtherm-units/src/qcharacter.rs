@@ -5,25 +5,19 @@ pub enum FieldType {
     Tensor,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ScalarDomain {
     Real,
     Complex,
 }
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct QCharacter {
     pub field_type: FieldType,
     pub scalar_domain: ScalarDomain,
 }
 
 impl QCharacter {
-    pub const fn new(field_type: FieldType, scalar_domain: ScalarDomain) -> Self {
-        Self {
-            field_type,
-            scalar_domain,
-        }
-    }
-
     pub const REAL_SCALAR: Self = Self { field_type: FieldType::Scalar, scalar_domain: ScalarDomain::Real };
 
     /// Outer-product convention: rank(a⊗b) = rank(a)+rank(b), capped at Tensor.
@@ -39,11 +33,10 @@ impl QCharacter {
     pub const fn div(self, other: Self) -> Self {
         let field_type = match (self.field_type, other.field_type) {
             (a, FieldType::Scalar) => a,
-            
+
             (a, b) if matches!(
-                (a, b), (FieldType::Scalar, FieldType::Scalar)
-                | (FieldType::Vector, FieldType::Vector)
-                | (FieldType::Tensor, FieldType::Tensor)
+                (a, b),
+                (FieldType::Vector, FieldType::Vector) | (FieldType::Tensor, FieldType::Tensor)
             ) => FieldType::Scalar,
 
             (a, _) => a, // best-effort; caller responsibility
