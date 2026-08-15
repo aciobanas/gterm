@@ -3,6 +3,7 @@ pub mod errors;
 pub mod isq;
 pub mod ratio;
 pub mod qspec;
+pub mod qcharacter;
 mod utils;
 
 pub use crate::dims::*;
@@ -10,3 +11,4 @@ pub use crate::errors::*;
 pub use crate::isq::Isq;
 pub use crate::ratio::*;
 pub use crate::qspec::*;
+pub use crate::qcharacter::*;
