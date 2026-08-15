@@ -24,79 +24,57 @@ impl QCharacter {
         }
     }
 
-    pub const fn mul(&self, other: &Self) -> Self {
-        let field_type = match (self.field_type, other.field_type) {
-            (FieldType::Scalar, FieldType::Scalar) => FieldType::Scalar,
+    pub const REAL_SCALAR: Self = Self { field_type: FieldType::Scalar, scalar_domain: ScalarDomain::Real };
 
-            (FieldType::Scalar, FieldType::Vector)
-            | (FieldType::Vector, FieldType::Scalar)
-            | (FieldType::Vector, FieldType::Vector) => FieldType::Vector,
-
-            _ => FieldType::Tensor,
-        };
-
-        let scalar_domain = match (self.scalar_domain, other.scalar_domain) {
-            (ScalarDomain::Real, ScalarDomain::Real) => ScalarDomain::Real,
-            _ => ScalarDomain::Complex,
-        };
-
+    /// Outer-product convention: rank(a⊗b) = rank(a)+rank(b), capped at Tensor.
+    pub const fn mul(self, other: Self) -> Self {
         Self {
-            field_type,
-            scalar_domain,
+            field_type: combine_field_types(self.field_type, other.field_type),
+            scalar_domain: combine_scalar_domains(self.scalar_domain, other.scalar_domain),
         }
     }
 
-    pub const fn div(&self, other: &Self) -> Self {
+    /// Division only makes physical sense when the divisor is Scalar;
+    /// for same-rank operands we return Scalar (ratio); otherwise preserve LHS rank.
+    pub const fn div(self, other: Self) -> Self {
         let field_type = match (self.field_type, other.field_type) {
-            (FieldType::Scalar, FieldType::Scalar) => FieldType::Scalar,
+            (a, FieldType::Scalar) => a,
+            
+            (a, b) if matches!(
+                (a, b), (FieldType::Scalar, FieldType::Scalar)
+                | (FieldType::Vector, FieldType::Vector)
+                | (FieldType::Tensor, FieldType::Tensor)
+            ) => FieldType::Scalar,
 
-            (FieldType::Scalar, FieldType::Vector)
-            | (FieldType::Vector, FieldType::Scalar)
-            | (FieldType::Vector, FieldType::Vector) => FieldType::Vector,
-
-            _ => FieldType::Tensor,
+            (a, _) => a, // best-effort; caller responsibility
         };
-
-        let scalar_domain = match (self.scalar_domain, other.scalar_domain) {
-            (ScalarDomain::Real, ScalarDomain::Real) => ScalarDomain::Real,
-            _ => ScalarDomain::Complex,
-        };
-
-        Self {
-            field_type,
-            scalar_domain,
-        }
+        Self { field_type, scalar_domain: combine_scalar_domains(self.scalar_domain, other.scalar_domain) }
     }
 
-    pub const fn pow(&self, exp: i32) -> Self {
+    pub const fn pow(self, exp: i32) -> Self {
         let field_type = match self.field_type {
             FieldType::Scalar => FieldType::Scalar,
-            FieldType::Vector => {
-                if exp == 0 {
-                    FieldType::Scalar
-                } else {
-                    FieldType::Vector
-                }
-            }
-            FieldType::Tensor => {
-                if exp == 0 {
-                    FieldType::Scalar
-                } else if exp == 1 {
-                    FieldType::Tensor
-                } else {
-                    FieldType::Tensor
-                }
-            }
+            _ if exp == 0    => FieldType::Scalar,
+            other            => other,
         };
+        Self { field_type, ..self }
+    }
+}
 
-        let scalar_domain = match self.scalar_domain {
-            ScalarDomain::Real => ScalarDomain::Real,
-            ScalarDomain::Complex => ScalarDomain::Complex,
-        };
 
-        Self {
-            field_type,
-            scalar_domain,
-        }
+const fn combine_field_types(a: FieldType, b: FieldType) -> FieldType {
+    use FieldType::*;
+    match (a, b) {
+        (Scalar, x) | (x, Scalar) => x,
+        (Vector, Vector) => Tensor, // outer product of two vectors is a tensor
+        _ => Tensor, // any combination involving a tensor results in a tensor
+    }
+}
+
+const fn combine_scalar_domains(a: ScalarDomain, b: ScalarDomain) -> ScalarDomain {
+    use ScalarDomain::*;
+    match (a, b) {
+        (Real, Real) => Real,
+        _ => Complex,
     }
 }
