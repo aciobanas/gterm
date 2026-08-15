@@ -33,25 +33,9 @@ pub struct QSpec {
 
 impl QSpec {
     /// Constructs a base spec (no equation); `dims` is one of the seven SI base dimensions.
-    const fn base(name: &'static str, dims: Dims) -> Self {
+    pub const fn base(name: &'static str, dims: Dims) -> Self {
         Self { name, dims, equation: None }
     }
-
-    // base quantity spec constants for the seven SI base quantities
-    /// Time.
-    pub const T: QSpec = QSpec::base("time", Dims::T);
-    /// Length.
-    pub const L: QSpec = QSpec::base("length", Dims::L);
-    /// Mass.
-    pub const M: QSpec = QSpec::base("mass", Dims::M);
-    /// Electric current.
-    pub const I: QSpec = QSpec::base("electric_current", Dims::I);
-    /// Thermodynamic temperature.
-    pub const THETA: QSpec = QSpec::base("thermodynamic_temperature", Dims::THETA);
-    /// Amount of substance.
-    pub const N: QSpec = QSpec::base("amount_of_substance", Dims::N);
-    /// Luminous intensity.
-    pub const J: QSpec = QSpec::base("luminous_intensity", Dims::J);
 
     /// Constructs a derived spec, computing `dims` from `equation` rather than requiring it be passed in.
     pub const fn derived(name: &'static str, equation: &'static QSpecEq) -> Self {
@@ -95,39 +79,5 @@ impl QSpec {
         None
     }
 }
-
-// some compile-time assertions to ensure that the const functions are working as expected
-const _: () = assert!(QSpec::T.is_base());
-const _: () = assert!(!QSpec::T.is_derived());
-const _: () = assert!(QSpec::L.dims.const_eq(&Dims::L));
-
-const _: () = assert!(QSpecEq::Term(&QSpec::L).dims().const_eq(&Dims::L));
-const _: () = assert!(
-    QSpecEq::Mul(&QSpecEq::Term(&QSpec::L), &QSpecEq::Term(&QSpec::T))
-        .dims()
-        .const_eq(&Dims::L.const_mul(&Dims::T))
-);
-const _: () = assert!(
-    QSpecEq::Div(&QSpecEq::Term(&QSpec::L), &QSpecEq::Term(&QSpec::T))
-        .dims()
-        .const_eq(&Dims::L.const_div(&Dims::T))
-);
-const _: () = assert!(
-    QSpecEq::Pow(&QSpecEq::Term(&QSpec::L), 3)
-        .dims()
-        .const_eq(&Dims::L.pow(3))
-);
-
-const _Q_WIDTH: QSpec = QSpec::derived("width", &QSpecEq::Term(&QSpec::L));
-const _: () = assert!(_Q_WIDTH.is_derived());
-const _: () = assert!(!_Q_WIDTH.is_base());
-const _: () = assert!(_Q_WIDTH.dims.const_eq(&Dims::L));
-
-const _Q_VELOCITY: QSpec = QSpec::derived(
-    "velocity",
-    &QSpecEq::Div(&QSpecEq::Term(&QSpec::L), &QSpecEq::Term(&QSpec::T)),
-);
-const _: () = assert!(_Q_VELOCITY.is_derived());
-const _: () = assert!(_Q_VELOCITY.dims.const_eq(&Dims::L.const_div(&Dims::T)));
 
 
