@@ -15,6 +15,8 @@ pub struct Isq;
 pub mod si_quantities;
 
 /// ISO 80000-3: Space and time
+pub mod space_and_time;
+
 /// ISO 80000-4: Mechanics
 /// ISO 80000-5: Thermodynamics
 /// ISO 80000-6: Electromagnetism
