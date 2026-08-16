@@ -48,9 +48,9 @@ impl QSpec {
     pub const fn new(name: &'static str) -> Self {
         Self {
             name,
-            dims: Dims::ZERO,                           // default to dimensionless
-            character: QCharacter::REAL_SCALAR,         // default to real scalar
-            equation: None                              // default to base quantity
+            dims: Dims::ZERO,                   // default to dimensionless
+            character: QCharacter::REAL_SCALAR, // default to real scalar
+            equation: None,                     // default to base quantity
         }
     }
 
@@ -72,7 +72,7 @@ impl QSpec {
         self.dims = equation.dims();
         self
     }
-    
+
     /// Whether this is one of the seven SI base quantities, as opposed to derived from an equation.
     pub const fn is_base(&self) -> bool {
         self.equation.is_none()
@@ -90,11 +90,13 @@ impl QSpec {
         }
 
         let mut self_ancestors: HashSet<&'static QSpec> = HashSet::new();
-        
+
         let mut current: &'static QSpec = self;
         loop {
             self_ancestors.insert(current);
-            let Some(QSpecEq::Term(sub)) = current.equation else { break };
+            let Some(QSpecEq::Term(sub)) = current.equation else {
+                break;
+            };
             current = sub;
         }
 
@@ -103,12 +105,12 @@ impl QSpec {
             if self_ancestors.contains(current) {
                 return Some(current);
             }
-            let Some(QSpecEq::Term(sub)) = current.equation else { break };
+            let Some(QSpecEq::Term(sub)) = current.equation else {
+                break;
+            };
             current = sub;
         }
 
         None
     }
 }
-
-

@@ -24,13 +24,31 @@ pub struct QCharacter {
 }
 
 impl QCharacter {
-    pub const REAL_SCALAR: Self = Self { tensor_order: Some(TensorOrder::Scalar), values_domain: ValuesDomain::Real };
-    pub const COMPLEX_SCALAR: Self = Self { tensor_order: Some(TensorOrder::Scalar), values_domain: ValuesDomain::Complex };
-    pub const REAL_VECTOR: Self = Self { tensor_order: Some(TensorOrder::Vector), values_domain: ValuesDomain::Real };
-    pub const COMPLEX_VECTOR: Self = Self { tensor_order: Some(TensorOrder::Vector), values_domain: ValuesDomain::Complex };
-    pub const REAL_TENSOR: Self = Self { tensor_order: Some(TensorOrder::Tensor), values_domain: ValuesDomain::Real };
-    pub const COMPLEX_TENSOR: Self = Self { tensor_order: Some(TensorOrder::Tensor), values_domain: ValuesDomain::Complex };
-    
+    pub const REAL_SCALAR: Self = Self {
+        tensor_order: Some(TensorOrder::Scalar),
+        values_domain: ValuesDomain::Real,
+    };
+    pub const COMPLEX_SCALAR: Self = Self {
+        tensor_order: Some(TensorOrder::Scalar),
+        values_domain: ValuesDomain::Complex,
+    };
+    pub const REAL_VECTOR: Self = Self {
+        tensor_order: Some(TensorOrder::Vector),
+        values_domain: ValuesDomain::Real,
+    };
+    pub const COMPLEX_VECTOR: Self = Self {
+        tensor_order: Some(TensorOrder::Vector),
+        values_domain: ValuesDomain::Complex,
+    };
+    pub const REAL_TENSOR: Self = Self {
+        tensor_order: Some(TensorOrder::Tensor),
+        values_domain: ValuesDomain::Real,
+    };
+    pub const COMPLEX_TENSOR: Self = Self {
+        tensor_order: Some(TensorOrder::Tensor),
+        values_domain: ValuesDomain::Complex,
+    };
+
     /// Whether this has a tensor order explicitly set.
     pub const fn has_tensor_order(&self) -> bool {
         self.tensor_order.is_some()
@@ -45,7 +63,10 @@ impl QCharacter {
         };
         Self {
             tensor_order,
-            values_domain: QCharacter::combine_scalar_domains(self.values_domain, other.values_domain),
+            values_domain: QCharacter::combine_scalar_domains(
+                self.values_domain,
+                other.values_domain,
+            ),
         }
     }
 
@@ -58,7 +79,10 @@ impl QCharacter {
         };
         Self {
             tensor_order,
-            values_domain: QCharacter::combine_scalar_domains(self.values_domain, other.values_domain),
+            values_domain: QCharacter::combine_scalar_domains(
+                self.values_domain,
+                other.values_domain,
+            ),
         }
     }
 
@@ -70,7 +94,10 @@ impl QCharacter {
             _ if exp == 0 => Some(Scalar),
             x => x,
         };
-        Self { tensor_order, ..self }
+        Self {
+            tensor_order,
+            ..self
+        }
     }
 
     /// Combines two scalar domains; the result is `Complex` unless both are `Real`.

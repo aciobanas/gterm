@@ -5,8 +5,8 @@
 //! write `Isq::L`, `Isq::V`, `Isq::E`, etc.
 //!
 
-use crate::qspec::{QSpec, QSpecEq};
 use crate::dims::Dims;
+use crate::qspec::{QSpec, QSpecEq};
 
 /// ISQ namespace. Access quantities as associated constants, e.g. `Isq::LENGTH`.
 pub struct Isq;
@@ -23,9 +23,7 @@ pub mod mechanics;
 /// ISO 80000-5: Thermodynamics
 pub mod thermodynamics;
 
-
 impl Isq {
-
     // base quantity spec constants for the seven SI base quantities
 
     /// Time.
@@ -45,7 +43,6 @@ impl Isq {
 
     /// dimensionless quantity.
     pub const DIMENSIONLESS: QSpec = QSpec::new("dimensionless").dims(Dims::ZERO);
-    
 }
 
 // some compile-time assertions to ensure that the const functions are working as expected

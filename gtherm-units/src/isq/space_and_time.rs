@@ -23,30 +23,26 @@ impl Isq {
 
     pub const DISTANCE: QSpec = QSpec::new("distance").equation(&Term(&Isq::PATH_LENGTH));
 
-    pub const RADIAL_DISTANCE: QSpec = QSpec::new("radial_distance").equation(&Term(&Isq::DISTANCE));
+    pub const RADIAL_DISTANCE: QSpec =
+        QSpec::new("radial_distance").equation(&Term(&Isq::DISTANCE));
 
     pub const DISPLACEMENT: QSpec = QSpec::new("displacement")
         .equation(&Term(&Isq::L))
         .character(QCharacter::REAL_VECTOR);
 
-    pub const POSITION_VECTOR: QSpec = QSpec::new("position_vector")
-        .equation(&Term(&Isq::DISPLACEMENT));
+    pub const POSITION_VECTOR: QSpec =
+        QSpec::new("position_vector").equation(&Term(&Isq::DISPLACEMENT));
 
-    pub const RADIUS_OF_CURVATURE: QSpec = QSpec::new("radius_of_curvature")
-        .equation(&Term(&Isq::RADIUS));
+    pub const RADIUS_OF_CURVATURE: QSpec =
+        QSpec::new("radius_of_curvature").equation(&Term(&Isq::RADIUS));
 
-    pub const CURVATURE: QSpec = QSpec::new("curvature")
-        .equation(&Pow(&Term(&Isq::RADIUS_OF_CURVATURE), -1));
+    pub const CURVATURE: QSpec =
+        QSpec::new("curvature").equation(&Pow(&Term(&Isq::RADIUS_OF_CURVATURE), -1));
 
     pub const VOLUME: QSpec = QSpec::new("volume").equation(&Pow(&Term(&Isq::L), 3));
 
     pub const ROTATIONAL_DISPLACEMENT: QSpec = QSpec::new("rotational_displacement")
-        .equation(
-            &Div(
-                &Term(&Isq::PATH_LENGTH),
-                &Term(&Isq::RADIUS),
-            )
-        );
+        .equation(&Div(&Term(&Isq::PATH_LENGTH), &Term(&Isq::RADIUS)));
 
     pub const ANGULAR_DISPLACEMENT: QSpec = Isq::ROTATIONAL_DISPLACEMENT;
 
@@ -55,15 +51,15 @@ impl Isq {
     /// Differs from ISO 80000.
     pub const SPEED: QSpec = QSpec::new("speed").equation(&Div(&Term(&Isq::L), &Term(&Isq::T)));
 
-    pub const VELOCITY: QSpec = QSpec::new("velocity")
-        .equation(&Div(&Term(&Isq::DISPLACEMENT), &Term(&Isq::T)));
+    pub const VELOCITY: QSpec =
+        QSpec::new("velocity").equation(&Div(&Term(&Isq::DISPLACEMENT), &Term(&Isq::T)));
 
-    pub const ACCELERATION: QSpec = QSpec::new("acceleration")
-        .equation(&Div(&Term(&Isq::VELOCITY), &Term(&Isq::T)));
+    pub const ACCELERATION: QSpec =
+        QSpec::new("acceleration").equation(&Div(&Term(&Isq::VELOCITY), &Term(&Isq::T)));
 
     /// Not in ISO 80000. Vector: inherited from `acceleration` in the original.
-    pub const ACCELERATION_OF_FREE_FALL: QSpec = QSpec::new("acceleration_of_free_fall")
-        .equation(&Term(&Isq::ACCELERATION));
+    pub const ACCELERATION_OF_FREE_FALL: QSpec =
+        QSpec::new("acceleration_of_free_fall").equation(&Term(&Isq::ACCELERATION));
 
     pub const ANGULAR_VELOCITY: QSpec = QSpec::new("angular_velocity")
         .equation(&Div(&Term(&Isq::ANGULAR_DISPLACEMENT), &Term(&Isq::T)));
@@ -76,11 +72,11 @@ impl Isq {
 
     pub const ROTATION: QSpec = QSpec::new("rotation");
 
-    pub const ROTATIONAL_FREQUENCY: QSpec = QSpec::new("rotational_frequency")
-        .equation(&Div(&Term(&Isq::ROTATION), &Term(&Isq::T)));
+    pub const ROTATIONAL_FREQUENCY: QSpec =
+        QSpec::new("rotational_frequency").equation(&Div(&Term(&Isq::ROTATION), &Term(&Isq::T)));
 
-    pub const ANGULAR_FREQUENCY: QSpec = QSpec::new("angular_frequency")
-        .equation(&Div(&Term(&Isq::PHASE_ANGLE), &Term(&Isq::T)));
+    pub const ANGULAR_FREQUENCY: QSpec =
+        QSpec::new("angular_frequency").equation(&Div(&Term(&Isq::PHASE_ANGLE), &Term(&Isq::T)));
 
     pub const WAVELENGTH: QSpec = QSpec::new("wavelength").equation(&Term(&Isq::L));
 
@@ -99,45 +95,34 @@ impl Isq {
     pub const WAVE_VECTOR: QSpec = QSpec::new("wave_vector")
         .equation(&Term(&Isq::ANGULAR_REPETENCY))
         .character(QCharacter::REAL_VECTOR);
-    
-    pub const PHASE_SPEED: QSpec = QSpec::new("phase_speed").equation(
-        &Div(
-            &Term(&Isq::ANGULAR_FREQUENCY),
-            &Term(&Isq::ANGULAR_REPETENCY),
-        )
-    );
 
-    pub const GROUP_SPEED: QSpec = QSpec::new("group_speed").equation(
-        &Div(
-            &Term(&Isq::ANGULAR_FREQUENCY),
-            &Term(&Isq::ANGULAR_REPETENCY),
-        )
-    );
+    pub const PHASE_SPEED: QSpec = QSpec::new("phase_speed").equation(&Div(
+        &Term(&Isq::ANGULAR_FREQUENCY),
+        &Term(&Isq::ANGULAR_REPETENCY),
+    ));
+
+    pub const GROUP_SPEED: QSpec = QSpec::new("group_speed").equation(&Div(
+        &Term(&Isq::ANGULAR_FREQUENCY),
+        &Term(&Isq::ANGULAR_REPETENCY),
+    ));
 
     pub const DAMPING_COEFFICIENT: QSpec =
         QSpec::new("damping_coefficient").equation(&Pow(&Term(&Isq::TIME_CONSTANT), -1));
 
-    pub const LOGARITHMIC_DECREMENT: QSpec = QSpec::new("logarithmic_decrement").equation(
-        &Mul(
-            &Term(&Isq::DAMPING_COEFFICIENT),
-            &Term(&Isq::PERIOD_DURATION),
-        )
-    );
+    pub const LOGARITHMIC_DECREMENT: QSpec = QSpec::new("logarithmic_decrement").equation(&Mul(
+        &Term(&Isq::DAMPING_COEFFICIENT),
+        &Term(&Isq::PERIOD_DURATION),
+    ));
 
     pub const ATTENUATION: QSpec =
         QSpec::new("attenuation").equation(&Pow(&Term(&Isq::DISTANCE), -1));
 
     pub const EXTINCTION: QSpec = Isq::ATTENUATION;
 
-    pub const PHASE_COEFFICIENT: QSpec = QSpec::new("phase_coefficient").equation(
-        &Div(
-            &Term(&Isq::PHASE_ANGLE),
-            &Term(&Isq::PATH_LENGTH),
-        )
-    );
+    pub const PHASE_COEFFICIENT: QSpec = QSpec::new("phase_coefficient")
+        .equation(&Div(&Term(&Isq::PHASE_ANGLE), &Term(&Isq::PATH_LENGTH)));
 
     /// γ = α + iβ where α is attenuation and β the phase coefficient of a plane wave.
     pub const PROPAGATION_COEFFICIENT: QSpec =
         QSpec::new("propagation_coefficient").equation(&Pow(&Term(&Isq::L), -1));
-    
 }
