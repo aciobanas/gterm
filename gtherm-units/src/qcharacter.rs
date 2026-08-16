@@ -54,7 +54,7 @@ impl QCharacter {
         self.tensor_order.is_some()
     }
 
-    /// Combines two characters as for a product; panics if both operands are non-scalar.
+    /// Combines two characters as for a product
     pub const fn mul(self, other: Self) -> Self {
         use TensorOrder::*;
         let tensor_order = match (self.tensor_order, other.tensor_order) {
@@ -70,7 +70,7 @@ impl QCharacter {
         }
     }
 
-    /// Combines two characters as for a quotient; panics unless the divisor is scalar.
+    /// Combines two characters as for a quotient
     pub const fn div(self, other: Self) -> Self {
         use TensorOrder::*;
         let tensor_order = match (self.tensor_order, other.tensor_order) {
