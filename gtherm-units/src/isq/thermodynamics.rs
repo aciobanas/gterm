@@ -9,8 +9,6 @@ use QSpecEq::{Div, Mul, Pow, Term};
 
 use crate::isq::Isq;
 
-// Celsius_temperature is defined in ISQ but explicitly not supported (depends on SI units, breaks non-negativity)
-
 impl Isq {
     pub const LINEAR_EXPANSION_COEFFICIENT: QSpec = QSpec::new("linear_expansion_coefficient")
         .equation(&Mul(
@@ -33,21 +31,17 @@ impl Isq {
     pub const PRESSURE_COEFFICIENT: QSpec = QSpec::new("pressure_coefficient")
         .equation(&Div(&Term(&Isq::PRESSURE), &Term(&Isq::THETA)));
 
-    /// Own kind sharing `compressibility`'s dimension. TODO: how to handle the "negative" part?
     pub const ISOTHERMAL_COMPRESSIBILITY: QSpec = QSpec::new("isothermal_compressibility")
         .equation(&Mul(
             &Pow(&Term(&Isq::VOLUME), -1),
             &Div(&Term(&Isq::VOLUME), &Term(&Isq::PRESSURE)),
         ));
 
-    /// Own kind sharing `compressibility`'s dimension. TODO: how to handle the "negative" part?
     pub const ISENTROPIC_COMPRESSIBILITY: QSpec = QSpec::new("isentropic_compressibility")
         .equation(&Mul(
             &Pow(&Term(&Isq::VOLUME), -1),
             &Div(&Term(&Isq::VOLUME), &Term(&Isq::PRESSURE)),
         ));
-
-    // energy definition moved to mechanics
 
     /// Differs from ISO 80000.
     pub const INTERNAL_ENERGY: QSpec = QSpec::new("internal_energy").equation(&Term(&Isq::ENERGY));

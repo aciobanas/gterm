@@ -6,3 +6,6 @@ mod space_and_time;
 
 #[path = "isq/mechanics.rs"]
 mod mechanics;
+
+#[path = "isq/thermodynamics.rs"]
+mod thermodynamics;
