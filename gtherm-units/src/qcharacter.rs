@@ -109,3 +109,46 @@ impl QCharacter {
         }
     }
 }
+
+// some compile-time assertions to ensure that the const functions are working as expected
+// `matches!` is used instead of `==` since the derived `PartialEq::eq` isn't callable from `const` items.
+const _: () = assert!(QCharacter::REAL_SCALAR.has_tensor_order());
+const _: () = assert!(!QCharacter {
+    tensor_order: None,
+    values_domain: ValuesDomain::Real,
+}
+.has_tensor_order());
+
+const _: () = assert!(matches!(
+    QCharacter::REAL_SCALAR.mul(QCharacter::REAL_VECTOR).tensor_order,
+    Some(TensorOrder::Vector)
+));
+const _: () = assert!(matches!(
+    QCharacter::REAL_VECTOR.mul(QCharacter::REAL_SCALAR).tensor_order,
+    Some(TensorOrder::Vector)
+));
+const _: () = assert!(matches!(
+    QCharacter::REAL_SCALAR.mul(QCharacter::REAL_SCALAR).tensor_order,
+    Some(TensorOrder::Scalar)
+));
+const _: () = assert!(matches!(
+    QCharacter::REAL_SCALAR.mul(QCharacter::COMPLEX_SCALAR).values_domain,
+    ValuesDomain::Complex
+));
+const _: () = assert!(matches!(
+    QCharacter::REAL_SCALAR.mul(QCharacter::REAL_SCALAR).values_domain,
+    ValuesDomain::Real
+));
+
+const _: () = assert!(matches!(
+    QCharacter::REAL_VECTOR.div(QCharacter::REAL_SCALAR).tensor_order,
+    Some(TensorOrder::Vector)
+));
+const _: () = assert!(matches!(
+    QCharacter::REAL_SCALAR.div(QCharacter::REAL_SCALAR).tensor_order,
+    Some(TensorOrder::Scalar)
+));
+
+const _: () = assert!(matches!(QCharacter::REAL_VECTOR.pow(0).tensor_order, Some(TensorOrder::Scalar)));
+const _: () = assert!(matches!(QCharacter::REAL_VECTOR.pow(3).tensor_order, Some(TensorOrder::Vector)));
+const _: () = assert!(matches!(QCharacter::REAL_SCALAR.pow(5).tensor_order, Some(TensorOrder::Scalar)));
