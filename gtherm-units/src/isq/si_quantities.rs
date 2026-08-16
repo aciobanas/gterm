@@ -3,8 +3,7 @@
 //!
 //! Original source is MIT licensed, Copyright (c) 2018 Mateusz Pusz.
 //!
-//! Kinds are modeled implicitly here via [`QSpec::find_same_kind`], so the original's `is_kind`
-//! tag needs no explicit marker. The `non_negative`/`possibly_negative` sign tags aren't modeled.
+
 
 use crate::qcharacter::QCharacter;
 use crate::qspec::{QSpec, QSpecEq};
