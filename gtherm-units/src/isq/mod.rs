@@ -18,6 +18,8 @@ pub mod si_quantities;
 pub mod space_and_time;
 
 /// ISO 80000-4: Mechanics
+pub mod mechanics;
+
 /// ISO 80000-5: Thermodynamics
 /// ISO 80000-6: Electromagnetism
 
@@ -39,13 +41,16 @@ impl Isq {
     pub const N: QSpec = QSpec::new("amount_of_substance").dims(Dims::N);
     /// Luminous intensity.
     pub const J: QSpec = QSpec::new("luminous_intensity").dims(Dims::J);
+
+    /// dimensionless quantity.
+    pub const DIMENSIONLESS: QSpec = QSpec::new("dimensionless").dims(Dims::ZERO);
     
 }
 
+// some compile-time assertions to ensure that the const functions are working as expected
 const _: () = assert!(Isq::L.is_base());
 const _: () = assert!(Isq::T.dims.const_eq(&crate::dims::Dims::T));
 
-// some compile-time assertions to ensure that the const functions are working as expected
 const _: () = assert!(Isq::T.is_base());
 const _: () = assert!(!Isq::T.is_derived());
 const _: () = assert!(Isq::L.dims.const_eq(&Dims::L));

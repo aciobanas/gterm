@@ -66,9 +66,11 @@ impl Isq {
             )
         )
         .character(QCharacter::REAL_VECTOR);
-
+    
+    // override to scalar
     pub const PRESSURE: QSpec = QSpec::new("pressure")
-        .equation(&Div(&Term(&Isq::FORCE), &Term(&Isq::AREA)));
+        .equation(&Div(&Term(&Isq::FORCE), &Term(&Isq::AREA)))
+        .character(QCharacter::REAL_SCALAR);
 
     // electromagnetism
 
@@ -96,8 +98,7 @@ impl Isq {
         .character(QCharacter::COMPLEX_SCALAR);
 
     pub const ADMITTANCE: QSpec = QSpec::new("admittance")
-        .equation(&Pow(&Term(&Isq::IMPEDANCE), -1))
-        .character(QCharacter::COMPLEX_SCALAR);
+        .equation(&Pow(&Term(&Isq::IMPEDANCE), -1));
 
     pub const MAGNETIC_FLUX_DENSITY: QSpec = QSpec::new("magnetic_flux_density")
         .equation(&Div(

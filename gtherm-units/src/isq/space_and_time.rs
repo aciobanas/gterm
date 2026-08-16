@@ -55,29 +55,22 @@ impl Isq {
     /// Differs from ISO 80000.
     pub const SPEED: QSpec = QSpec::new("speed").equation(&Div(&Term(&Isq::L), &Term(&Isq::T)));
 
-    /// Differs from ISO 80000. Vector: inherited from `displacement` in the original.
     pub const VELOCITY: QSpec = QSpec::new("velocity")
-        .equation(&Div(&Term(&Isq::DISPLACEMENT), &Term(&Isq::T)))
-        .character(QCharacter::REAL_VECTOR);
+        .equation(&Div(&Term(&Isq::DISPLACEMENT), &Term(&Isq::T)));
 
-    /// Vector: inherited from `velocity` in the original.
     pub const ACCELERATION: QSpec = QSpec::new("acceleration")
-        .equation(&Div(&Term(&Isq::VELOCITY), &Term(&Isq::T)))
-        .character(QCharacter::REAL_VECTOR);
+        .equation(&Div(&Term(&Isq::VELOCITY), &Term(&Isq::T)));
 
     /// Not in ISO 80000. Vector: inherited from `acceleration` in the original.
     pub const ACCELERATION_OF_FREE_FALL: QSpec = QSpec::new("acceleration_of_free_fall")
-        .equation(&Term(&Isq::ACCELERATION))
-        .character(QCharacter::REAL_VECTOR);
+        .equation(&Term(&Isq::ACCELERATION));
 
     pub const ANGULAR_VELOCITY: QSpec = QSpec::new("angular_velocity")
-        .equation(&Div(&Term(&Isq::ANGULAR_DISPLACEMENT), &Term(&Isq::T)))
-        .character(QCharacter::REAL_VECTOR);
+        .equation(&Div(&Term(&Isq::ANGULAR_DISPLACEMENT), &Term(&Isq::T)));
 
     /// Vector: inherited from `angular_velocity` in the original.
     pub const ANGULAR_ACCELERATION: QSpec = QSpec::new("angular_acceleration")
-        .equation(&Div(&Term(&Isq::ANGULAR_VELOCITY), &Term(&Isq::T)))
-        .character(QCharacter::REAL_VECTOR);
+        .equation(&Div(&Term(&Isq::ANGULAR_VELOCITY), &Term(&Isq::T)));
 
     pub const TIME_CONSTANT: QSpec = QSpec::new("time_constant").equation(&Term(&Isq::T));
 
