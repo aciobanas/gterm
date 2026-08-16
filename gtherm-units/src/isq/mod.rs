@@ -21,7 +21,8 @@ pub mod space_and_time;
 pub mod mechanics;
 
 /// ISO 80000-5: Thermodynamics
-/// ISO 80000-6: Electromagnetism
+pub mod thermodynamics;
+
 
 impl Isq {
 
