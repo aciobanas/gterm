@@ -1,4 +1,5 @@
 use crate::dims::Dims;
+use crate::qcharacter::QCharacter;
 use std::collections::HashSet;
 
 /// A dependency graph node describing how a derived quantity is built from others, e.g. velocity = length / time.
@@ -28,20 +29,34 @@ impl QSpecEq {
 pub struct QSpec {
     pub name: &'static str,
     pub dims: Dims,
+    pub character: QCharacter,
     pub equation: Option<&'static QSpecEq>,
 }
 
 impl QSpec {
-    /// Constructs a base spec (no equation); `dims` is one of the seven SI base dimensions.
-    pub const fn base(name: &'static str, dims: Dims) -> Self {
-        Self { name, dims, equation: None }
+    /// Starts a builder for a base spec (real scalar, no equation); chain `.character()`
+    /// and/or `.equation()` to override.
+    pub const fn new(name: &'static str, dims: Dims) -> Self {
+        Self {
+            name,
+            dims,
+            character: QCharacter::REAL_SCALAR, // default to real scalar
+            equation: None // default to base quantity
+        }
     }
 
-    /// Constructs a derived spec, computing `dims` from `equation` rather than requiring it be passed in.
-    pub const fn derived(name: &'static str, equation: &'static QSpecEq) -> Self {
-        Self { name, dims: equation.dims(), equation: Some(equation) }
+    /// Overrides the default `REAL_SCALAR` character.
+    pub const fn character(mut self, character: QCharacter) -> Self {
+        self.character = character;
+        self
     }
 
+    /// Marks this as a derived spec built from `equation`.
+    pub const fn equation(mut self, equation: &'static QSpecEq) -> Self {
+        self.equation = Some(equation);
+        self
+    }
+    
     /// Whether this is one of the seven SI base quantities, as opposed to derived from an equation.
     pub const fn is_base(&self) -> bool {
         self.equation.is_none()
