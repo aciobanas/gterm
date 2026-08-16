@@ -36,13 +36,19 @@ pub struct QSpec {
 impl QSpec {
     /// Starts a builder for a base spec (real scalar, no equation); chain `.character()`
     /// and/or `.equation()` to override.
-    pub const fn new(name: &'static str, dims: Dims) -> Self {
+    pub const fn new(name: &'static str) -> Self {
         Self {
             name,
-            dims,
+            dims: Dims::ZERO, // default to dimensionless
             character: QCharacter::REAL_SCALAR, // default to real scalar
             equation: None // default to base quantity
         }
+    }
+
+    /// Overrides the default `Dims` for this spec.
+    pub const fn dims(mut self, dims: Dims) -> Self {
+        self.dims = dims;
+        self
     }
 
     /// Overrides the default `REAL_SCALAR` character.
@@ -54,6 +60,7 @@ impl QSpec {
     /// Marks this as a derived spec built from `equation`.
     pub const fn equation(mut self, equation: &'static QSpecEq) -> Self {
         self.equation = Some(equation);
+        self.dims = equation.dims();
         self
     }
     

@@ -4,7 +4,6 @@
 //! and extends `Isq` with a set of associated `const` [`QSpec`] items, so callers
 //! write `Isq::L`, `Isq::V`, `Isq::E`, etc.
 //!
-//! Chapters are added incrementally — currently only `space_and_time` is populated. (TODO)
 
 use crate::qspec::{QSpec, QSpecEq};
 use crate::dims::Dims;
@@ -22,19 +21,19 @@ impl Isq {
     // base quantity spec constants for the seven SI base quantities
 
     /// Time.
-    pub const T: QSpec = QSpec::base("time", Dims::T);
+    pub const T: QSpec = QSpec::new("time").dims(Dims::T);
     /// Length.
-    pub const L: QSpec = QSpec::base("length", Dims::L);
+    pub const L: QSpec = QSpec::new("length").dims(Dims::L);
     /// Mass.
-    pub const M: QSpec = QSpec::base("mass", Dims::M);
+    pub const M: QSpec = QSpec::new("mass").dims(Dims::M);
     /// Electric current.
-    pub const I: QSpec = QSpec::base("electric_current", Dims::I);
+    pub const I: QSpec = QSpec::new("electric_current").dims(Dims::I);
     /// Thermodynamic temperature.
-    pub const THETA: QSpec = QSpec::base("thermodynamic_temperature", Dims::THETA);
+    pub const THETA: QSpec = QSpec::new("thermodynamic_temperature").dims(Dims::THETA);
     /// Amount of substance.
-    pub const N: QSpec = QSpec::base("amount_of_substance", Dims::N);
+    pub const N: QSpec = QSpec::new("amount_of_substance").dims(Dims::N);
     /// Luminous intensity.
-    pub const J: QSpec = QSpec::base("luminous_intensity", Dims::J);
+    pub const J: QSpec = QSpec::new("luminous_intensity").dims(Dims::J);
     
 }
 
