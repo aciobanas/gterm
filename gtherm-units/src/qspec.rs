@@ -22,6 +22,15 @@ impl QSpecEq {
             QSpecEq::Pow(a, exp) => a.dims().pow(*exp),
         }
     }
+
+    pub const fn character(&self) -> QCharacter {
+        match self {
+            QSpecEq::Term(spec) => spec.character,
+            QSpecEq::Mul(a, b) => a.character().mul(b.character()),
+            QSpecEq::Div(a, b) => a.character().div(b.character()),
+            QSpecEq::Pow(a, exp) => a.character().pow(*exp),
+        }
+    }
 }
 
 /// A physical quantity's specification: its name, dimensionality, and (if derived) the equation it comes from.
@@ -39,9 +48,9 @@ impl QSpec {
     pub const fn new(name: &'static str) -> Self {
         Self {
             name,
-            dims: Dims::ZERO, // default to dimensionless
-            character: QCharacter::REAL_SCALAR, // default to real scalar
-            equation: None // default to base quantity
+            dims: Dims::ZERO,                           // default to dimensionless
+            character: QCharacter::REAL_SCALAR,         // default to real scalar
+            equation: None                              // default to base quantity
         }
     }
 
