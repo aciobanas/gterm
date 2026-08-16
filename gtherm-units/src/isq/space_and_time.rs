@@ -4,7 +4,8 @@
 //! Original source is MIT licensed, Copyright (c) 2018 Mateusz Pusz.
 //!
 
-use crate::qcharacter::QCharacter;
+use crate::dims::Dims;
+use crate::qcharacter::{QCharacter, TensorOrder};
 use crate::qspec::{QSpec, QSpecEq};
 use QSpecEq::{Div, Mul, Pow, Term};
 
@@ -126,3 +127,16 @@ impl Isq {
     pub const PROPAGATION_COEFFICIENT: QSpec =
         QSpec::new("propagation_coefficient").equation(&Pow(&Term(&Isq::L), -1));
 }
+
+// some compile-time assertions to ensure that the const functions are working as expected
+const _: () = assert!(Isq::VOLUME.dims.const_eq(&Dims::L.pow(3)));
+const _: () = assert!(Isq::VELOCITY.dims.const_eq(&Dims::L.const_div(&Dims::T)));
+const _: () = assert!(Isq::ACCELERATION.dims.const_eq(&Isq::VELOCITY.dims.const_div(&Dims::T)));
+const _: () = assert!(Isq::ANGULAR_VELOCITY.dims.const_eq(&Isq::ANGULAR_DISPLACEMENT.dims.const_div(&Dims::T)));
+const _: () = assert!(Isq::REPETENCY.dims.const_eq(&Dims::L.pow(-1)));
+const _: () = assert!(Isq::CURVATURE.dims.const_eq(&Dims::L.pow(-1)));
+const _: () = assert!(Isq::ATTENUATION.dims.const_eq(&Isq::DISTANCE.dims.pow(-1)));
+
+// character overrides should stick regardless of what the equation's operands would otherwise combine to
+const _: () = assert!(matches!(Isq::DISPLACEMENT.character.tensor_order, Some(TensorOrder::Vector)));
+const _: () = assert!(matches!(Isq::WAVE_VECTOR.character.tensor_order, Some(TensorOrder::Vector)));

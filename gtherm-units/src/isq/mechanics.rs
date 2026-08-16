@@ -4,7 +4,8 @@
 //! Original source is MIT licensed, Copyright (c) 2018 Mateusz Pusz.
 //!
 
-use crate::qcharacter::QCharacter;
+use crate::dims::Dims;
+use crate::qcharacter::{QCharacter, TensorOrder};
 use crate::qspec::{QSpec, QSpecEq};
 use QSpecEq::{Div, Mul, Pow, Term};
 
@@ -232,3 +233,20 @@ impl Isq {
     pub const ACTION: QSpec =
         QSpec::new("action").equation(&Mul(&Term(&Isq::ENERGY), &Term(&Isq::T)));
 }
+
+// some compile-time assertions to ensure that the const functions are working as expected
+const _: () = assert!(Isq::MASS_DENSITY.dims.const_eq(&Dims::M.const_div(&Isq::VOLUME.dims)));
+const _: () = assert!(Isq::SPECIFIC_VOLUME.dims.const_eq(&Isq::MASS_DENSITY.dims.pow(-1)));
+const _: () = assert!(Isq::MOMENTUM.dims.const_eq(&Dims::M.const_mul(&Isq::VELOCITY.dims)));
+const _: () = assert!(Isq::COMPRESSIBILITY.dims.const_eq(&Isq::VOLUME.dims.pow(-1).const_mul(&Isq::VOLUME.dims.const_div(&Isq::PRESSURE.dims))));
+const _: () = assert!(Isq::MOMENT_OF_INERTIA.dims.const_eq(&Isq::ANGULAR_MOMENTUM.dims.const_div(&Isq::ANGULAR_VELOCITY.dims)));
+const _: () = assert!(Isq::KINETIC_ENERGY.dims.const_eq(&Dims::M.const_mul(&Isq::SPEED.dims.pow(2))));
+
+// character overrides should stick regardless of what the equation's operands would otherwise combine to
+const _: () = assert!(matches!(Isq::ANGULAR_MOMENTUM.character.tensor_order, Some(TensorOrder::Vector)));
+const _: () = assert!(matches!(Isq::MOMENT_OF_INERTIA.character.tensor_order, Some(TensorOrder::Tensor)));
+const _: () = assert!(matches!(Isq::STRESS.character.tensor_order, Some(TensorOrder::Tensor)));
+const _: () = assert!(matches!(Isq::STRAIN.character.tensor_order, Some(TensorOrder::Tensor)));
+const _: () = assert!(matches!(Isq::MASS_FLOW.character.tensor_order, Some(TensorOrder::Vector)));
+// no override: derived from the vector `moment_of_force` but stays the default scalar
+const _: () = assert!(matches!(Isq::TORQUE.character.tensor_order, Some(TensorOrder::Scalar)));
