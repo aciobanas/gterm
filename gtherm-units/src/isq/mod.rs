@@ -11,6 +11,9 @@ use crate::dims::Dims;
 /// ISQ namespace. Access quantities as associated constants, e.g. `Isq::LENGTH`.
 pub struct Isq;
 
+/// ISO 80000-1: General
+pub mod si_quantities;
+
 /// ISO 80000-3: Space and time
 /// ISO 80000-4: Mechanics
 /// ISO 80000-5: Thermodynamics
