@@ -1,6 +1,6 @@
 use gtherm_units::errors::ZeroDenominatorError;
-use gtherm_units::si::prefix::Prefix;
 use gtherm_units::ratio::*;
+use gtherm_units::si::prefix::Prefix;
 
 #[test]
 fn test_ratio_creation() {
@@ -145,7 +145,11 @@ fn test_ratio_metric_prefix_constants() {
 
     // adjacent prefixes should be inverses of each other
     assert!(Prefix::MILLI.const_mul(&Prefix::KILO).const_eq(&Ratio::ONE));
-    assert!(Prefix::CENTI.const_mul(&Prefix::HECTO).const_eq(&Ratio::ONE));
+    assert!(
+        Prefix::CENTI
+            .const_mul(&Prefix::HECTO)
+            .const_eq(&Ratio::ONE)
+    );
     assert!(Prefix::DECI.const_mul(&Prefix::DECA).const_eq(&Ratio::ONE));
 }
 
