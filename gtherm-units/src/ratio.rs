@@ -32,6 +32,21 @@ impl Ratio {
     pub const ONE: Ratio = Ratio::new(1, 1);
     pub const ZERO: Ratio = Ratio::new(0, 1);
 
+    pub const FEMTO: Ratio = Ratio::new(1, 1_000_000_000_000_000);
+    pub const PICO: Ratio = Ratio::new(1, 1_000_000_000_000);
+    pub const NANO: Ratio = Ratio::new(1, 1_000_000_000);
+    pub const MICRO: Ratio = Ratio::new(1, 1_000_000);
+    pub const MILLI: Ratio = Ratio::new(1, 1_000);
+    pub const CENTI: Ratio = Ratio::new(1, 100);
+    pub const DECI: Ratio = Ratio::new(1, 10);
+    pub const DECA: Ratio = Ratio::new(10, 1);
+    pub const HECTO: Ratio = Ratio::new(100, 1);
+    pub const KILO: Ratio = Ratio::new(1_000, 1);
+    pub const MEGA: Ratio = Ratio::new(1_000_000, 1);
+    pub const GIGA: Ratio = Ratio::new(1_000_000_000, 1);
+    pub const TERA: Ratio = Ratio::new(1_000_000_000_000, 1);
+    pub const PETA: Ratio = Ratio::new(1_000_000_000_000_000, 1);
+
     /// Const-context equivalent of `==`; trait methods can't be called from `const fn`/`const` items on stable Rust.
     pub const fn const_eq(&self, other: &Ratio) -> bool {
         self.numerator * other.denominator == self.denominator * other.numerator
