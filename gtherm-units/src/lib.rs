@@ -1,6 +1,7 @@
 pub mod dims;
 pub mod errors;
 pub mod isq;
+pub mod si;
 pub mod qcharacter;
 pub mod qspec;
 pub mod ratio;

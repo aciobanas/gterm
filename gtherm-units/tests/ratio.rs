@@ -1,4 +1,5 @@
 use gtherm_units::errors::ZeroDenominatorError;
+use gtherm_units::si::prefix::Prefix;
 use gtherm_units::ratio::*;
 
 #[test]
@@ -127,25 +128,25 @@ fn test_ratio_const_div_by_zero_panics() {
 
 #[test]
 fn test_ratio_metric_prefix_constants() {
-    assert_eq!(Ratio::FEMTO.to_double(), 1e-15);
-    assert_eq!(Ratio::PICO.to_double(), 1e-12);
-    assert_eq!(Ratio::NANO.to_double(), 1e-9);
-    assert_eq!(Ratio::MICRO.to_double(), 1e-6);
-    assert_eq!(Ratio::MILLI.to_double(), 1e-3);
-    assert_eq!(Ratio::CENTI.to_double(), 1e-2);
-    assert_eq!(Ratio::DECI.to_double(), 1e-1);
-    assert_eq!(Ratio::DECA.to_double(), 1e1);
-    assert_eq!(Ratio::HECTO.to_double(), 1e2);
-    assert_eq!(Ratio::KILO.to_double(), 1e3);
-    assert_eq!(Ratio::MEGA.to_double(), 1e6);
-    assert_eq!(Ratio::GIGA.to_double(), 1e9);
-    assert_eq!(Ratio::TERA.to_double(), 1e12);
-    assert_eq!(Ratio::PETA.to_double(), 1e15);
+    assert_eq!(Prefix::FEMTO.to_double(), 1e-15);
+    assert_eq!(Prefix::PICO.to_double(), 1e-12);
+    assert_eq!(Prefix::NANO.to_double(), 1e-9);
+    assert_eq!(Prefix::MICRO.to_double(), 1e-6);
+    assert_eq!(Prefix::MILLI.to_double(), 1e-3);
+    assert_eq!(Prefix::CENTI.to_double(), 1e-2);
+    assert_eq!(Prefix::DECI.to_double(), 1e-1);
+    assert_eq!(Prefix::DECA.to_double(), 1e1);
+    assert_eq!(Prefix::HECTO.to_double(), 1e2);
+    assert_eq!(Prefix::KILO.to_double(), 1e3);
+    assert_eq!(Prefix::MEGA.to_double(), 1e6);
+    assert_eq!(Prefix::GIGA.to_double(), 1e9);
+    assert_eq!(Prefix::TERA.to_double(), 1e12);
+    assert_eq!(Prefix::PETA.to_double(), 1e15);
 
     // adjacent prefixes should be inverses of each other
-    assert!(Ratio::MILLI.const_mul(&Ratio::KILO).const_eq(&Ratio::ONE));
-    assert!(Ratio::CENTI.const_mul(&Ratio::HECTO).const_eq(&Ratio::ONE));
-    assert!(Ratio::DECI.const_mul(&Ratio::DECA).const_eq(&Ratio::ONE));
+    assert!(Prefix::MILLI.const_mul(&Prefix::KILO).const_eq(&Ratio::ONE));
+    assert!(Prefix::CENTI.const_mul(&Prefix::HECTO).const_eq(&Ratio::ONE));
+    assert!(Prefix::DECI.const_mul(&Prefix::DECA).const_eq(&Ratio::ONE));
 }
 
 #[test]
