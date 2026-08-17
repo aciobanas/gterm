@@ -104,3 +104,56 @@ fn test_ratio_const_pow_edge_cases() {
 fn test_ratio_const_pow_zero_to_negative_exponent_panics() {
     Ratio::ZERO.const_pow(-1);
 }
+
+#[test]
+fn test_ratio_const_mul_and_const_div() {
+    assert!(
+        Ratio::new(1, 2)
+            .const_mul(&Ratio::new(2, 3))
+            .const_eq(&Ratio::new(1, 3))
+    );
+    assert!(
+        Ratio::new(1, 2)
+            .const_div(&Ratio::new(1, 3))
+            .const_eq(&Ratio::new(3, 2))
+    );
+}
+
+#[test]
+#[should_panic(expected = "cannot divide by zero ratio")]
+fn test_ratio_const_div_by_zero_panics() {
+    Ratio::ONE.const_div(&Ratio::ZERO);
+}
+
+#[test]
+fn test_ratio_metric_prefix_constants() {
+    assert_eq!(Ratio::FEMTO.to_double(), 1e-15);
+    assert_eq!(Ratio::PICO.to_double(), 1e-12);
+    assert_eq!(Ratio::NANO.to_double(), 1e-9);
+    assert_eq!(Ratio::MICRO.to_double(), 1e-6);
+    assert_eq!(Ratio::MILLI.to_double(), 1e-3);
+    assert_eq!(Ratio::CENTI.to_double(), 1e-2);
+    assert_eq!(Ratio::DECI.to_double(), 1e-1);
+    assert_eq!(Ratio::DECA.to_double(), 1e1);
+    assert_eq!(Ratio::HECTO.to_double(), 1e2);
+    assert_eq!(Ratio::KILO.to_double(), 1e3);
+    assert_eq!(Ratio::MEGA.to_double(), 1e6);
+    assert_eq!(Ratio::GIGA.to_double(), 1e9);
+    assert_eq!(Ratio::TERA.to_double(), 1e12);
+    assert_eq!(Ratio::PETA.to_double(), 1e15);
+
+    // adjacent prefixes should be inverses of each other
+    assert!(Ratio::MILLI.const_mul(&Ratio::KILO).const_eq(&Ratio::ONE));
+    assert!(Ratio::CENTI.const_mul(&Ratio::HECTO).const_eq(&Ratio::ONE));
+    assert!(Ratio::DECI.const_mul(&Ratio::DECA).const_eq(&Ratio::ONE));
+}
+
+#[test]
+fn test_ratio_clone_copy_and_debug() {
+    let r = Ratio::new(3, 4);
+    let cloned = r.clone();
+    let copied = r;
+    assert_eq!(r, cloned);
+    assert_eq!(r, copied);
+    assert_eq!(format!("{r:?}"), "Ratio { numerator: 3, denominator: 4 }");
+}
