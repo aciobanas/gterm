@@ -134,13 +134,18 @@ const _: () = assert!(VELOCITY.dims.const_eq(&VELOCITY_EQ.dims()));
 const _: () = assert!(VELOCITY.is_derived());
 const _: () = assert!(!VELOCITY.is_base());
 
-const _: () = assert!(matches!(FORCE.character.tensor_order, Some(TensorOrder::Vector)));
+const _: () = assert!(matches!(
+    FORCE.character.tensor_order,
+    Some(TensorOrder::Vector)
+));
 
 // `Mul`/`Div`/`Pow` on `QSpecEq` should combine dims and character the same way as on `Dims`/`QCharacter` directly
 const MOMENTUM_EQ: QSpecEq = QSpecEq::Mul(&QSpecEq::Term(&FORCE), &QSpecEq::Term(&TIME));
 const _: () = assert!(MOMENTUM_EQ.dims().const_eq(&Dims::T));
-const _: () = assert!(matches!(MOMENTUM_EQ.character().tensor_order, Some(TensorOrder::Vector)));
+const _: () = assert!(matches!(
+    MOMENTUM_EQ.character().tensor_order,
+    Some(TensorOrder::Vector)
+));
 
 const AREA_EQ: QSpecEq = QSpecEq::Pow(&QSpecEq::Term(&LEN), 2);
 const _: () = assert!(AREA_EQ.dims().const_eq(&Dims::L.pow(2)));
-

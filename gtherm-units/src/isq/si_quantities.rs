@@ -128,19 +128,54 @@ impl Isq {
 }
 
 // some compile-time assertions to ensure that the const functions are working as expected
-const _: () = assert!(Isq::ENERGY.dims.const_eq(
-    &Dims::M.const_mul(&Dims::L.pow(2)).const_div(&Dims::T.pow(2)),
-));
-const _: () = assert!(Isq::FORCE.dims.const_eq(&Dims::M.const_mul(&Dims::L).const_div(&Dims::T.pow(2))));
-const _: () = assert!(Isq::PRESSURE.dims.const_eq(&Isq::FORCE.dims.const_div(&Isq::AREA.dims)));
-const _: () = assert!(Isq::POWER.dims.const_eq(&Isq::ENERGY.dims.const_div(&Dims::T)));
+const _: () = assert!(
+    Isq::ENERGY.dims.const_eq(
+        &Dims::M
+            .const_mul(&Dims::L.pow(2))
+            .const_div(&Dims::T.pow(2)),
+    )
+);
+const _: () = assert!(
+    Isq::FORCE
+        .dims
+        .const_eq(&Dims::M.const_mul(&Dims::L).const_div(&Dims::T.pow(2)))
+);
+const _: () = assert!(
+    Isq::PRESSURE
+        .dims
+        .const_eq(&Isq::FORCE.dims.const_div(&Isq::AREA.dims))
+);
+const _: () = assert!(
+    Isq::POWER
+        .dims
+        .const_eq(&Isq::ENERGY.dims.const_div(&Dims::T))
+);
 const _: () = assert!(Isq::ADMITTANCE.dims.const_eq(&Isq::IMPEDANCE.dims.pow(-1)));
 const _: () = assert!(Isq::ACTIVITY.dims.const_eq(&Dims::T.pow(-1)));
-const _: () = assert!(Isq::ABSORBED_DOSE.dims.const_eq(&Isq::ENERGY.dims.const_div(&Dims::M)));
+const _: () = assert!(
+    Isq::ABSORBED_DOSE
+        .dims
+        .const_eq(&Isq::ENERGY.dims.const_div(&Dims::M))
+);
 
 // character overrides should stick regardless of what the equation's operands would otherwise combine to
-const _: () = assert!(matches!(Isq::FORCE.character.tensor_order, Some(TensorOrder::Vector)));
-const _: () = assert!(matches!(Isq::FORCE.character.values_domain, ValuesDomain::Real));
-const _: () = assert!(matches!(Isq::PRESSURE.character.tensor_order, Some(TensorOrder::Scalar)));
-const _: () = assert!(matches!(Isq::IMPEDANCE.character.values_domain, ValuesDomain::Complex));
-const _: () = assert!(matches!(Isq::MAGNETIC_FLUX_DENSITY.character.tensor_order, Some(TensorOrder::Vector)));
+const _: () = assert!(matches!(
+    Isq::FORCE.character.tensor_order,
+    Some(TensorOrder::Vector)
+));
+const _: () = assert!(matches!(
+    Isq::FORCE.character.values_domain,
+    ValuesDomain::Real
+));
+const _: () = assert!(matches!(
+    Isq::PRESSURE.character.tensor_order,
+    Some(TensorOrder::Scalar)
+));
+const _: () = assert!(matches!(
+    Isq::IMPEDANCE.character.values_domain,
+    ValuesDomain::Complex
+));
+const _: () = assert!(matches!(
+    Isq::MAGNETIC_FLUX_DENSITY.character.tensor_order,
+    Some(TensorOrder::Vector)
+));

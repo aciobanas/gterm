@@ -58,25 +58,43 @@ fn test_pressure_dims_and_character_override_to_scalar() {
 
 #[test]
 fn test_electric_potential_and_capacitance_dims() {
-    assert_eq!(Isq::ELECTRIC_POTENTIAL.dims, Isq::ENERGY.dims / (Dims::I * Dims::T));
-    assert_eq!(Isq::CAPACITANCE.dims, (Dims::I * Dims::T) / Isq::ELECTRIC_POTENTIAL.dims);
+    assert_eq!(
+        Isq::ELECTRIC_POTENTIAL.dims,
+        Isq::ENERGY.dims / (Dims::I * Dims::T)
+    );
+    assert_eq!(
+        Isq::CAPACITANCE.dims,
+        (Dims::I * Dims::T) / Isq::ELECTRIC_POTENTIAL.dims
+    );
 }
 
 #[test]
 fn test_impedance_is_complex_and_admittance_is_its_inverse() {
-    assert_eq!(Isq::IMPEDANCE.character.values_domain, ValuesDomain::Complex);
+    assert_eq!(
+        Isq::IMPEDANCE.character.values_domain,
+        ValuesDomain::Complex
+    );
     assert_eq!(Isq::ADMITTANCE.dims, Isq::IMPEDANCE.dims.pow(-1));
 }
 
 #[test]
 fn test_magnetic_flux_density_is_a_vector() {
-    assert_eq!(Isq::MAGNETIC_FLUX_DENSITY.character.tensor_order, Some(TensorOrder::Vector));
+    assert_eq!(
+        Isq::MAGNETIC_FLUX_DENSITY.character.tensor_order,
+        Some(TensorOrder::Vector)
+    );
 }
 
 #[test]
 fn test_luminous_flux_and_illuminance_dims() {
-    assert_eq!(Isq::LUMINOUS_FLUX.dims, Dims::J * Isq::SOLID_ANGULAR_MEASURE.dims);
-    assert_eq!(Isq::ILLUMINANCE.dims, Isq::LUMINOUS_FLUX.dims / Isq::AREA.dims);
+    assert_eq!(
+        Isq::LUMINOUS_FLUX.dims,
+        Dims::J * Isq::SOLID_ANGULAR_MEASURE.dims
+    );
+    assert_eq!(
+        Isq::ILLUMINANCE.dims,
+        Isq::LUMINOUS_FLUX.dims / Isq::AREA.dims
+    );
 }
 
 #[test]
@@ -101,7 +119,10 @@ fn test_absorbed_dose_and_dose_equivalent_dims() {
 #[test]
 fn test_power_and_energy_density_dims() {
     assert_eq!(Isq::POWER.dims, Dims::M * Dims::L.pow(2) / Dims::T.pow(3));
-    assert_eq!(Isq::ENERGY_DENSITY.dims, Dims::M / (Dims::L * Dims::T.pow(2)));
+    assert_eq!(
+        Isq::ENERGY_DENSITY.dims,
+        Dims::M / (Dims::L * Dims::T.pow(2))
+    );
 }
 
 #[test]

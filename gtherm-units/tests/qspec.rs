@@ -1,7 +1,7 @@
+use QSpecEq::{Div, Mul, Pow, Term};
 use gtherm_units::dims::Dims;
 use gtherm_units::qcharacter::{QCharacter, TensorOrder};
 use gtherm_units::qspec::*;
-use QSpecEq::{Div, Mul, Pow, Term};
 
 const LENGTH: QSpec = QSpec::new("length").dims(Dims::L);
 const TIME: QSpec = QSpec::new("time").dims(Dims::T);
@@ -16,12 +16,16 @@ const VELOCITY_EQ: QSpecEq = Div(&Term(&LENGTH), &Term(&TIME));
 const VELOCITY: QSpec = QSpec::new("velocity").equation(&VELOCITY_EQ);
 
 const FORCE: QSpec = QSpec::new("force")
-    .equation(&Div(&Mul(&Term(&MASS), &Term(&LENGTH)), &Pow(&Term(&TIME), 2)))
+    .equation(&Div(
+        &Mul(&Term(&MASS), &Term(&LENGTH)),
+        &Pow(&Term(&TIME), 2),
+    ))
     .character(QCharacter::REAL_VECTOR);
 
 // same dims as `AREA` but derived through an unrelated equation, so it isn't the same "kind"
 const AREA: QSpec = QSpec::new("area").equation(&Pow(&Term(&LENGTH), 2));
-const UNRELATED_AREA: QSpec = QSpec::new("unrelated_area").equation(&Mul(&Term(&LENGTH), &Term(&LENGTH)));
+const UNRELATED_AREA: QSpec =
+    QSpec::new("unrelated_area").equation(&Mul(&Term(&LENGTH), &Term(&LENGTH)));
 
 #[test]
 fn test_qspec_new_defaults_to_dimensionless_scalar_base() {
@@ -69,11 +73,17 @@ fn test_qspeceq_mul_div_pow_compose_dims() {
 fn test_qspeceq_character_composes_through_operators() {
     // mass (scalar) * velocity (scalar) stays scalar
     let momentum_eq = Mul(&Term(&MASS), &Term(&VELOCITY));
-    assert_eq!(momentum_eq.character().tensor_order, Some(TensorOrder::Scalar));
+    assert_eq!(
+        momentum_eq.character().tensor_order,
+        Some(TensorOrder::Scalar)
+    );
 
     // force (vector) * time (scalar) stays a vector
     let impulse_eq = Mul(&Term(&FORCE), &Term(&TIME));
-    assert_eq!(impulse_eq.character().tensor_order, Some(TensorOrder::Vector));
+    assert_eq!(
+        impulse_eq.character().tensor_order,
+        Some(TensorOrder::Vector)
+    );
 }
 
 #[test]

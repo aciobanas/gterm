@@ -113,7 +113,10 @@ fn test_phase_speed_and_group_speed_dims() {
 
 #[test]
 fn test_damping_coefficient_and_logarithmic_decrement_dims() {
-    assert_eq!(Isq::DAMPING_COEFFICIENT.dims, Isq::TIME_CONSTANT.dims.pow(-1));
+    assert_eq!(
+        Isq::DAMPING_COEFFICIENT.dims,
+        Isq::TIME_CONSTANT.dims.pow(-1)
+    );
     // damping_coefficient (T^-1) * period_duration (T) cancels out to dimensionless
     assert_eq!(Isq::LOGARITHMIC_DECREMENT.dims, Dims::ZERO);
 }
@@ -126,15 +129,24 @@ fn test_attenuation_and_extinction_alias() {
 
 #[test]
 fn test_phase_coefficient_and_propagation_coefficient_dims() {
-    assert_eq!(Isq::PHASE_COEFFICIENT.dims, Isq::PHASE_ANGLE.dims / Isq::PATH_LENGTH.dims);
+    assert_eq!(
+        Isq::PHASE_COEFFICIENT.dims,
+        Isq::PHASE_ANGLE.dims / Isq::PATH_LENGTH.dims
+    );
     assert_eq!(Isq::PROPAGATION_COEFFICIENT.dims, Dims::L.pow(-1));
 }
 
 #[test]
 fn test_find_same_kind_across_a_term_chain() {
     // diameter and thickness are both directly rooted in width
-    assert_eq!(Isq::DIAMETER.find_same_kind(&Isq::THICKNESS), Some(&Isq::WIDTH));
+    assert_eq!(
+        Isq::DIAMETER.find_same_kind(&Isq::THICKNESS),
+        Some(&Isq::WIDTH)
+    );
 
     // height and altitude share the closer `altitude` ancestor
-    assert_eq!(Isq::HEIGHT.find_same_kind(&Isq::ALTITUDE), Some(&Isq::ALTITUDE));
+    assert_eq!(
+        Isq::HEIGHT.find_same_kind(&Isq::ALTITUDE),
+        Some(&Isq::ALTITUDE)
+    );
 }

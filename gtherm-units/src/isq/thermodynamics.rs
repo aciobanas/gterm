@@ -227,14 +227,50 @@ impl Isq {
 }
 
 // some compile-time assertions to ensure that the const functions are working as expected
-const _: () = assert!(Isq::HEAT_FLOW_RATE.dims.const_eq(&Isq::HEAT.dims.const_div(&Isq::T.dims)));
-const _: () = assert!(Isq::HEAT_CAPACITY.dims.const_eq(&Isq::HEAT.dims.const_div(&Isq::THETA.dims)));
-const _: () = assert!(Isq::SPECIFIC_HEAT_CAPACITY.dims.const_eq(&Isq::HEAT_CAPACITY.dims.const_div(&Isq::M.dims)));
-const _: () = assert!(Isq::THERMAL_RESISTANCE.dims.const_eq(&Isq::THETA.dims.const_div(&Isq::HEAT_FLOW_RATE.dims)));
-const _: () = assert!(Isq::THERMAL_CONDUCTANCE.dims.const_eq(&Isq::THERMAL_RESISTANCE.dims.pow(-1)));
-const _: () = assert!(Isq::ENTROPY.dims.const_eq(&Isq::KINETIC_ENERGY.dims.const_div(&Isq::THETA.dims)));
+const _: () = assert!(
+    Isq::HEAT_FLOW_RATE
+        .dims
+        .const_eq(&Isq::HEAT.dims.const_div(&Isq::T.dims))
+);
+const _: () = assert!(
+    Isq::HEAT_CAPACITY
+        .dims
+        .const_eq(&Isq::HEAT.dims.const_div(&Isq::THETA.dims))
+);
+const _: () = assert!(
+    Isq::SPECIFIC_HEAT_CAPACITY
+        .dims
+        .const_eq(&Isq::HEAT_CAPACITY.dims.const_div(&Isq::M.dims))
+);
+const _: () = assert!(
+    Isq::THERMAL_RESISTANCE
+        .dims
+        .const_eq(&Isq::THETA.dims.const_div(&Isq::HEAT_FLOW_RATE.dims))
+);
+const _: () = assert!(
+    Isq::THERMAL_CONDUCTANCE
+        .dims
+        .const_eq(&Isq::THERMAL_RESISTANCE.dims.pow(-1))
+);
+const _: () = assert!(
+    Isq::ENTROPY
+        .dims
+        .const_eq(&Isq::KINETIC_ENERGY.dims.const_div(&Isq::THETA.dims))
+);
 
 // ratios of like dimensions should reduce to dimensionless
-const _: () = assert!(Isq::RATIO_OF_SPECIFIC_HEAT_CAPACITIES.dims.const_eq(&crate::dims::Dims::ZERO));
-const _: () = assert!(Isq::MAXIMUM_EFFICIENCY.dims.const_eq(&crate::dims::Dims::ZERO));
-const _: () = assert!(Isq::RELATIVE_HUMIDITY.dims.const_eq(&crate::dims::Dims::ZERO));
+const _: () = assert!(
+    Isq::RATIO_OF_SPECIFIC_HEAT_CAPACITIES
+        .dims
+        .const_eq(&crate::dims::Dims::ZERO)
+);
+const _: () = assert!(
+    Isq::MAXIMUM_EFFICIENCY
+        .dims
+        .const_eq(&crate::dims::Dims::ZERO)
+);
+const _: () = assert!(
+    Isq::RELATIVE_HUMIDITY
+        .dims
+        .const_eq(&crate::dims::Dims::ZERO)
+);
