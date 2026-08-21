@@ -28,7 +28,6 @@ impl Unit {
             ratio: self.ratio.const_mul(&other.ratio),
         }
     }
-
 }
 
 pub struct Quantity<T> {
